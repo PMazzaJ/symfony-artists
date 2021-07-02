@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artists{% endblock %}
+
+{% block body %}
+
+<style>
+
+    .inner-artists-wrapper {       
+        display: inline-block;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .artist-title {
+        text-align:center;        
+        font-size: 1.5em;
+    }
+        
+</style>
+
+<p class="lead artist-title"> Create an album of your favorite artist! </p>
+
+<div class="container-md col-md-8">
+
+    <form action="{{ path('show_albums') }}" method="post">
+        <div class="mb-3">
+            <label for="artist-name" class="form-label">Artist</label>
+            <select class="form-select artists-select pointer" name="artist[name]"></select>
+        </div>
+        <div class="mb-3">
+            <label for="album-name" class="form-label">Album Name</label>
+            <input type="text" class="form-control pointer" id="album-name" name="artist[album]">
+        </div>
+        <div class="mb-3">
+            <label for="album-year" class="form-label">Year</label>
+            <input type="number" class="form-control pointer" id="album-year" min="1700" max="2021" name="artist[year]">
+        </div> 
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {                             
+
+        const populateSelect = () => {
+
+            const artistListSelect = document.querySelector('.artists-select') 
+            const artists = JSON.parse('{{ artists | json_encode | raw }}');
+                        
+            const artistsNames = artists.map((artist) => {                
+                return `<option value=${artist[0].id}>${artist[0].name}</option></li>`                
+            }).join('')
+            
+            artistListSelect.innerHTML = artistsNames;      
+        }
+
+        populateSelect();
+
+        // const redirectWithoutInser = () => {
+
+        //     window.location = "{{ path('show_albums') }}";
+        //ver como fazer essa merda de redirect
+
+        // }
+
+        // redirectWithoutInser()
+
+
+    });
+    
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artists{% endblock %}
+
+{% block body %}
+
+<style>
+
+    .inner-artists-wrapper {       
+        display: inline-block;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .artist-title {
+        text-align:center;        
+        font-size: 1.5em;
+    }
+        
+</style>
+
+<p class="lead artist-title"> Edit Album </p>
+
+<div class="container-md col-md-8">
+
+    <form action="{{ path('update_album') }}" method="post">
+        <div class="mb-3">
+            <label for="artist-name" class="form-label">Artist</label>
+            <select class="form-select artists-select pointer" name="artist[name]">
+                {# <option value="{{album.artist}}">{{album.artist}}</option></li> #}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="album-name" class="form-label">Album Name</label>
+            <input type="text" class="form-control pointer" id="album-name" name="artist[album]">
+        </div>
+        <div class="mb-3">
+            <label for="album-year" class="form-label">Year</label>
+            <input type="number" class="form-control pointer" id="album-year" min="1700" max="2021" name="artist[year]">
+        </div> 
+        <input type="hidden" class="form-control pointer" id="artist-id" name="artist[id]" value="{{album.id}}">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {                             
+
+        const artistName = '{{ album.artist }}'
+        const artistAlbum = '{{ album.albumName }}'
+        const artistYear = '{{ album.year }}'
+        
+        const populateSelect = () => {
+
+            const artistListSelect = document.querySelector('.artists-select') 
+            const artists = JSON.parse('{{ artists | json_encode | raw }}');
+                        
+            const artistsNames = artists.map((artist) => {              
+
+                if (artistName === artist[0].name) {
+                    return `<option value=${artist[0].id} selected>${artist[0].name}</option></li>`                    
+                }
+
+                return `<option value=${artist[0].id}>${artist[0].name}</option></li>`                
+            }).join('')
+            
+            artistListSelect.innerHTML = artistsNames;      
+        }
+
+        const updateFormValues = () => {
+           
+            const artistAlbumNameInput = document.querySelector('#album-name') 
+            const artistYearInput = document.querySelector('#album-year') 
+            
+            artistAlbumNameInput.value = artistAlbum
+            artistYearInput.value = artistYear
+           
+        }
+
+        populateSelect();
+        updateFormValues();
+
+    });
+    
+</script>
+{% endblock %}
+
+

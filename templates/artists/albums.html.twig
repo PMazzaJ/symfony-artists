@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artists{% endblock %}
+
+{% block body %}
+
+<style>
+    .artist-title {
+        text-align:center;        
+        font-size: 1.5em;
+    }
+    .buttons {
+        width: 10em;
+        table-layout: fixed;
+        border-collapse: collapse;        
+    }
+    td {
+        text-align: center;
+        vertical-align: middle;
+    } 
+  
+</style>
+
+<p class="lead artist-title center"> Your Albums </p>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col" class="text-center">Artist</th>
+            <th scope="col" class="text-center">Album</th>
+            <th scope="col" class="text-center">Year</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th scope="col" class="text-center">User</th>
+            {% endif %}
+            <th scope="col" class="text-center">Edit Album</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th scope="col" class="text-center">Delete Album</th>
+            {% endif %}
+        </tr>
+    </thead>
+  <tbody>
+    {% for album in albums %}
+        <tr id="{{album.id}}">
+            <th scope="row">{{loop.index}}</th>
+            <td>{{album.artist}}</td>     
+            <td>{{album.albumName}}</td>     
+            <td>{{album.year}}</td>     
+            {% if is_granted('ROLE_ADMIN') %}
+                <td>{{album.user.fullName}}</td>     
+            {% endif %}
+            <td><button type="button" class="btn btn-primary btn-sm buttons" id="{{album.id}}" data-edit="edit">Edit</button></td>
+            {% if is_granted('ROLE_ADMIN') %}
+                <td><button type="button" class="btn btn-danger btn-sm buttons" id="{{album.id}}" data-delete="delete">Delete</button></td>
+            {% endif %}            
+        </tr>   
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {                             
+        
+        const table = document.querySelector(".table");
+        
+        table.addEventListener('click', (evt) => {
+                        
+            if (evt.target.dataset.edit == 'edit') {                                              
+                window.location = "{{ path('edit', {'album':0}) }}".replace("0", evt.target.id)    
+            }
+
+            if (evt.target.dataset.delete == 'delete') {                                                       
+
+                fetch("{{ path('delete_album') }}", {
+                    method: 'DELETE',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: evt.target.id })
+                })
+                .then(response => response.json())
+                .then(response => {                        
+                    if (response.status === 2) { //if album was successfully deleted, update ui
+                        updateUi(evt.target.id)
+                    }
+                })
+                .catch(error => console.log(error))
+            }      
+        });     
+
+        const updateUi = (lineId) => {                       
+            let elem = document.getElementById(lineId);
+            elem.remove(); 
+        }
+
+    });
+    
+</script>
+{% endblock %}
