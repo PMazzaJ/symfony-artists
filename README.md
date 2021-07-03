@@ -20,5 +20,5 @@ Here you will make an album of your favorite artist 🧑‍🎨
   Crud (Only Admin can delete)  ✔️  
   
 ▶️ Artist List  ✔️
-  get artist list form api https://moat.ai/api/task/
-  get single artist by id from https://moat.ai/api/task/?id=<artist_id>
+  get artist list form api https://moat.ai/api/task/  
+  get single artist by id from https://moat.ai/api/task/?id=<artist_id>  
