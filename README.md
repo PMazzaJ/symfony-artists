@@ -2,7 +2,10 @@
 Hello, this is a simple crud symfony app. 
 Here you will make an album of your favorite artist 🧑‍🎨
 
+## Database - MySql 
 
+▶️ Entities - User and Album (OneToMany User -> Albums)
+  
 ## Requirements 
 
 ▶️ Register  
@@ -11,8 +14,10 @@ Here you will make an album of your favorite artist 🧑‍🎨
 ▶️ Login  
   Register Form ✔️  
   Security.yaml configured (redirects and authentication) ✔️  
-  Failed login attempt message ✔️  
-  
+  Failed login attempt message with redirect to login route ✔️  
   
 ▶️ Albums  
-▶️ Artist List  
+  Crud (Only Admin can delete)  ✔️  
+  
+▶️ Artist List  ✔️
+  get artist list form api https://moat.ai/api/task/
